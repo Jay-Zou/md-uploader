@@ -1,0 +1,3 @@
+mdu-config:
+  authBasic: "ZGVtb2ppZToxMTExMTExMQ==1"
+  uploadRrl: "http://192.168.198.155:1080/wp-json/brain1981/v1/stream"
