@@ -36,10 +36,11 @@ public class Uploader {
 
     UploaderContext uploaderContext = mdLinkParser.parse(mdFile);
     if (uploaderContext.getMathInfoInLineList().isEmpty()) {
-      System.err.println("不需要转换");
+      System.err.println("没找到需要上传的文件，不需要转换！");
       System.exit(0);
     }
     List<MathInfoInLine> mathInfoInLineList = uploaderContext.getMathInfoInLineList();
+    // TODO 对于重复文件，不需要重复上传
     uploadFiles(mathInfoInLineList);
     System.out.println("全部上传完毕！");
 

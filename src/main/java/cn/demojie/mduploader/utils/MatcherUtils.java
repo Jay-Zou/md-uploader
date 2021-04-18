@@ -26,13 +26,24 @@ public class MatcherUtils {
     List<MatchEntity> matchEntityList = new LinkedList<>();
     Matcher matcher = pattern.matcher(source);
     while (matcher.find()) {
+      String matchContent = matcher.group(1);
+      if (isIgnore(matchContent)) {
+        continue;
+      }
       MatchEntity matchEntity = new MatchEntity();
       matchEntity.setStart(matcher.start());
       matchEntity.setEnd(matcher.end());
-      matchEntity.setMatchContent(matcher.group(1));
+      matchEntity.setMatchContent(matchContent);
       matchEntityList.add(matchEntity);
     }
     return matchEntityList;
+  }
+
+  private static boolean isIgnore(String matchContent) {
+    return matchContent.startsWith("http://")
+        || matchContent.startsWith("HTTP://")
+        || matchContent.startsWith("https://")
+        || matchContent.startsWith("HTTPS://");
   }
 
   public static String replace(String origin, List<MatchEntity> matchResults,
