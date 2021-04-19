@@ -1,6 +1,6 @@
 package cn.demojie.mduploader;
 
-import cn.demojie.mduploader.service.Uploader;
+import cn.demojie.mduploader.service.MdUploaderHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +17,7 @@ public class MdUploaderApplication implements CommandLineRunner {
   }
 
   @Autowired
-  Uploader uploader;
+  MdUploaderHandler mdUploaderHandler;
 
   @Override
   public void run(String... args) throws Exception {
@@ -31,7 +31,7 @@ public class MdUploaderApplication implements CommandLineRunner {
       return;
     }
     String mdFile = args[0];
-    uploader.handle(mdFile);
+    mdUploaderHandler.handle(mdFile);
   }
 
 }

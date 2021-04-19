@@ -1,7 +1,7 @@
-package cn.demojie.mduploader.service;
+package cn.demojie.mduploader.uploader.impl;
 
 import cn.demojie.mduploader.config.MduConfig;
-import cn.demojie.mduploader.test.TestConst;
+import cn.demojie.mduploader.uploader.AbstractUploader;
 import cn.demojie.mduploader.utils.CommonUtils;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -13,35 +13,20 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.springframework.stereotype.Service;
 
-@Service
-public class WebSession {
 
-  public static final HttpClient HTTP_CLIENT = HttpClients.createDefault();
+public class CustomUploaderImpl extends AbstractUploader {
 
-  public List<String> uploadFiles(MduConfig mduConfig, List<String> filePaths) throws Exception {
-    CommonUtils.checkFilesExists(filePaths);
-    List<String> returnLinks = new ArrayList<>(filePaths.size());
-    for (String filePath : filePaths) {
-      returnLinks.add(uploadFile(mduConfig, filePath));
-    }
-    // TODO 如果中途失败，则删除已上传的文件
-    return returnLinks;
-  }
-
-  public String uploadFile(MduConfig mduConfig, String filePath) throws Exception {
-    File file = new File(filePath);
+  @Override
+  public String upload(MduConfig mduConfig, File file) throws Exception {
     System.out.println("上传文件：" + file.getAbsolutePath());
     HttpPost httpPost = buildRequest(mduConfig, file);
-    HttpResponse httpResponse = HTTP_CLIENT.execute(httpPost);
+    HttpResponse httpResponse = CommonUtils.getHttpClient().execute(httpPost);
     HttpEntity httpEntity = httpResponse.getEntity();
     if (httpEntity == null) {
       return null;
@@ -83,13 +68,5 @@ public class WebSession {
     map.put("mime", CommonUtils.getMimeType(file.getName()));
     map.put("content", bytes);
     return CommonUtils.getObjectMapper().writeValueAsString(map);
-  }
-
-  public static void main(String[] args) throws Exception {
-    WebSession webSession = new WebSession();
-    MduConfig mduConfig = new MduConfig();
-    String filePath = TestConst.FILE_PATH;
-    String returnLink = webSession.uploadFile(mduConfig, filePath);
-    System.out.println(returnLink);
   }
 }

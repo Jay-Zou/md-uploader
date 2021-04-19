@@ -3,6 +3,7 @@ package cn.demojie.mduploader.service;
 import cn.demojie.mduploader.entity.MatchEntity;
 import cn.demojie.mduploader.entity.MathInfoInLine;
 import cn.demojie.mduploader.entity.UploaderContext;
+import cn.demojie.mduploader.utils.CommonUtils;
 import cn.demojie.mduploader.utils.MatcherUtils;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,8 @@ public class MdLinkParser {
     UploaderContext uploaderContext = new UploaderContext();
     List<String> lines;
     try {
+      String baseDir = CommonUtils.getBaseDir(file);
+      uploaderContext.setFileBaseDir(baseDir);
       lines = Files.readAllLines(file.toPath());
     } catch (IOException e) {
       throw new RuntimeException("读取文件失败！");

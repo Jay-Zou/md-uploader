@@ -12,13 +12,13 @@ public class UploaderContext {
   private List<String> originContent;
 
   /**
-   * 准备上传的文件
-   */
-  private List<String> preUploadFiles;
-
-  /**
    * 解析出来的内容
    */
   private List<MathInfoInLine> mathInfoInLineList;
+
+  /**
+   * 文件所在的路径
+   */
+  private String fileBaseDir;
 
 }

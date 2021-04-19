@@ -4,6 +4,7 @@ import cn.demojie.mduploader.config.MduConfig;
 import cn.demojie.mduploader.entity.MatchEntity;
 import cn.demojie.mduploader.entity.MathInfoInLine;
 import cn.demojie.mduploader.entity.UploaderContext;
+import cn.demojie.mduploader.uploader.Uploader;
 import cn.demojie.mduploader.utils.CommonUtils;
 import cn.demojie.mduploader.utils.MatcherUtils;
 import java.io.File;
@@ -18,10 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Uploader {
+public class MdUploaderHandler {
 
   @Autowired
-  WebSession webSession;
+  Uploader uploader;
 
   @Autowired
   MduConfig mduConfig;
@@ -39,12 +40,12 @@ public class Uploader {
       System.err.println("没找到需要上传的文件，不需要转换！");
       System.exit(0);
     }
-    List<MathInfoInLine> mathInfoInLineList = uploaderContext.getMathInfoInLineList();
     // TODO 对于重复文件，不需要重复上传
-    uploadFiles(mathInfoInLineList);
+    uploadFiles(uploaderContext);
     System.out.println("全部上传完毕！");
 
     List<String> originContent = uploaderContext.getOriginContent();
+    List<MathInfoInLine> mathInfoInLineList = uploaderContext.getMathInfoInLineList();
     rePutToContent(mathInfoInLineList, originContent);
 
     // CommonUtils.printContent(originContent);
@@ -71,14 +72,22 @@ public class Uploader {
     }
   }
 
-  private void uploadFiles(List<MathInfoInLine> mathInfoInLineList) throws Exception {
+  private void uploadFiles(UploaderContext uploaderContext) throws Exception {
+    List<MathInfoInLine> mathInfoInLineList = uploaderContext.getMathInfoInLineList();
     for (MathInfoInLine mathInfoInLine : mathInfoInLineList) {
       String content = mathInfoInLine.getContent();
       List<MatchEntity> matchEntityList = mathInfoInLine.getMatchEntityList();
-      List<String> preUploadFiles = matchEntityList.stream().map(MatchEntity::getMatchContent)
-          .collect(Collectors.toList());
+      List<File> preUploadFiles = matchEntityList.stream().map(matchEntity -> {
+        String filePath = matchEntity.getMatchContent();
+        File file = new File(filePath);
+        if (!file.isAbsolute()) {
+          file = new File(uploaderContext.getFileBaseDir(), filePath);
+        }
+        CommonUtils.checkFileExists(file);
+        return file;
+      }).collect(Collectors.toList());
       // 一行内的上传文件
-      List<String> returnLinks = webSession.uploadFiles(mduConfig, preUploadFiles);
+      List<String> returnLinks = uploader.upload(mduConfig, preUploadFiles);
       System.out.println("返回的链接：" + returnLinks);
       String finalContent = MatcherUtils.replace(content, matchEntityList, returnLinks);
       // 将替换后的内容放回去

@@ -1,3 +1,3 @@
 mdu-config:
-  authBasic: "ZGVtb2ppZToxMTExMTExMQ==1"
-  uploadRrl: "http://192.168.198.155:1080/wp-json/brain1981/v1/stream"
+  authBasic: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjE5OC4xNTU6MTA4MCIsImlhdCI6MTYxODg0MzU2OSwibmJmIjoxNjE4ODQzNTY5LCJleHAiOjE2MTk0NDgzNjksImRhdGEiOnsidXNlciI6eyJpZCI6IjEifX19.itYMAErBmJkb0w5lfUHo8t8uYbYDoNyM9n787owAGL4"
+  uploadRrl: "http://192.168.198.155:1080/wp-json/wp/v2/media"
