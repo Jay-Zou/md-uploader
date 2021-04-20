@@ -1,6 +1,8 @@
 package cn.demojie.mduploader;
 
+import cn.demojie.mduploader.config.MduConfig;
 import cn.demojie.mduploader.service.MdUploaderHandler;
+import cn.demojie.mduploader.utils.CmdParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -30,8 +32,8 @@ public class MdUploaderApplication implements CommandLineRunner {
       System.err.println("请指定文件！");
       return;
     }
-    String mdFile = args[0];
-    mdUploaderHandler.handle(mdFile);
+    MduConfig mduConfig = CmdParser.getConfig(args);
+    mdUploaderHandler.handle(mduConfig);
   }
 
 }

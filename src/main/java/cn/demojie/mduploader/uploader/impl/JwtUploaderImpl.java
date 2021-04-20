@@ -53,8 +53,8 @@ public class JwtUploaderImpl extends AbstractUploader {
   private Header[] buildHeaders(MduConfig mduConfig, String name) {
     List<Header> headers = new ArrayList<>(2);
     // 使用已经 BASE64 处理的用户名和密码
-    if (mduConfig.getAuthBasic() != null) {
-      headers.add(CommonUtils.newAuthHeader(mduConfig.getAuthBasic()));
+    if (mduConfig.getToken() != null) {
+      headers.add(CommonUtils.newAuthHeader(mduConfig.getToken()));
     } else {
       // 使用 username/password
       headers.add(CommonUtils.newAuthHeader(mduConfig.getUsername(), mduConfig.getPassword()));

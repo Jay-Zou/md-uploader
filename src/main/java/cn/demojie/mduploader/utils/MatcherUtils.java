@@ -15,9 +15,8 @@ public class MatcherUtils {
   /**
    * 一行有多个？不太可能 ![](待购买.assets/image-20210418160308920.png) ![](待购买.assets/image-20210418160308920.png)
    * <p>
-   * ![image-20210418160308920](待购买.assets/image-20210418160308920.png)
-   * <img src="待购买.assets/image-20210418160308920.png" alt="image-20210418160308920"
-   * style="zoom:50%;" />
+   * ![image-20210418160308920](待购买.assets/image-20210418160308920.png) <img
+   * src="待购买.assets/image-20210418160308920.png" alt="image-20210418160308920" style="zoom:50%;" />
    * <img src="http://192.168.198.155:1080/wp-content/uploads/2021/04/prefix_vertical-logo-monochromatic-4.png"
    * style="zoom:50%;" /> TODO 处理套娃：<img src="![](xxx)"/> ![](<img src=""/>) 更深的嵌套
    *

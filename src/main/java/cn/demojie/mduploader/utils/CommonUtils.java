@@ -74,5 +74,8 @@ public class CommonUtils {
     }
   }
 
+  public static String getHomePath() {
+    return System.getProperty("user.home");
+  }
 
 }

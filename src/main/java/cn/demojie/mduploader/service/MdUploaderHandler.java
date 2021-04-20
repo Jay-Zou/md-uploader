@@ -25,13 +25,11 @@ public class MdUploaderHandler {
   Uploader uploader;
 
   @Autowired
-  MduConfig mduConfig;
-
-  @Autowired
   MdLinkParser mdLinkParser;
 
   @SneakyThrows
-  public void handle(String mdFile) {
+  public void handle(MduConfig mduConfig) {
+    String mdFile = mduConfig.getMdFile();
     // TODO 当修改文件后，需要将原文件删除。所以上传文件后要保存一下链接
     CommonUtils.checkFileExists(mdFile);
 
@@ -41,7 +39,7 @@ public class MdUploaderHandler {
       System.exit(0);
     }
     // TODO 对于重复文件，不需要重复上传
-    uploadFiles(uploaderContext);
+    uploadFiles(mduConfig, uploaderContext);
     System.out.println("全部上传完毕！");
 
     List<String> originContent = uploaderContext.getOriginContent();
@@ -72,7 +70,7 @@ public class MdUploaderHandler {
     }
   }
 
-  private void uploadFiles(UploaderContext uploaderContext) throws Exception {
+  private void uploadFiles(MduConfig mduConfig, UploaderContext uploaderContext) throws Exception {
     List<MathInfoInLine> mathInfoInLineList = uploaderContext.getMathInfoInLineList();
     for (MathInfoInLine mathInfoInLine : mathInfoInLineList) {
       String content = mathInfoInLine.getContent();

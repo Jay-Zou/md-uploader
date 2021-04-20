@@ -1,13 +1,8 @@
 package cn.demojie.mduploader.config;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
-@Component
-@PropertySource(value = {"classpath:application.yml"})
-@ConfigurationProperties(prefix = "mdu-config")
+
 @Data
 public class MduConfig {
 
@@ -18,14 +13,19 @@ public class MduConfig {
   private String password;
 
   /**
+   * MdFile
+   */
+  private String mdFile;
+
+  /**
    * 密码账号的 base64 编码（优先使用这个，当为 null 时采用密码账号）
    */
-  private String authBasic = "ZGVtb2ppZToxMTExMTExMQ==";
+  private String token;
 
   /**
    * 上传 URL
    */
-  private String uploadRrl = "http://192.168.198.155:1080/wp-json/brain1981/v1/stream";
+  private String uploadRrl;
 
 
   /**
