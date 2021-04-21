@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class MatcherUtils {
 
   private static final String MD_PIC_PATTERN = "!\\[.*?]\\((.*?)\\)";
-  private static final String IMG_TAG_PATTERN = "<(img|IMG)(.*?)src=\"(.*?)\"";
+  private static final String IMG_TAG_PATTERN = "<[img|IMG].*?src=\"(.*?)\"";
   // TODO img 样式的，如果两种样式在同一行
 
   /**
@@ -23,18 +23,21 @@ public class MatcherUtils {
    * @return
    */
   public static List<MatchEntity> find(String source) {
-    Pattern pattern = Pattern.compile(MD_PIC_PATTERN);
+    Pattern pattern = Pattern.compile(String.format("%s|%s", MD_PIC_PATTERN, IMG_TAG_PATTERN));
     List<MatchEntity> matchEntityList = new LinkedList<>();
     Matcher matcher = pattern.matcher(source);
     while (matcher.find()) {
-      String matchContent = matcher.group(1);
+      int groupNum = 1;
+      if (matcher.group(1) == null) {
+        groupNum = 2;
+      }
+      String matchContent = matcher.group(groupNum);
       if (isIgnore(matchContent)) {
         continue;
       }
       MatchEntity matchEntity = new MatchEntity();
-      // TODO 这里的 start 和 end 是整个匹配到的，而不是组
-      matchEntity.setStart(matcher.start());
-      matchEntity.setEnd(matcher.end());
+      matchEntity.setStart(matcher.start(groupNum));
+      matchEntity.setEnd(matcher.end(groupNum));
       matchEntity.setMatchContent(matchContent);
       matchEntityList.add(matchEntity);
     }
@@ -54,17 +57,9 @@ public class MatcherUtils {
     // 从后面往前替换
     for (int i = matchResults.size() - 1; i >= 0; i--) {
       MatchEntity matchEntity = matchResults.get(i);
-      String matchContent = matchEntity.getMatchContent();
-      int end = matchEntity.getEnd();
-      finalContent.replace(end - 1 - matchContent.length(), end - 1, contents.get(i));
+      finalContent.replace(matchEntity.getStart(), matchEntity.getEnd(), contents.get(i));
     }
     return finalContent.toString();
-  }
-
-  public static void main(String[] args) {
-    String source = "<img src=\"待购买.assets/image-20210418160308920.png\" alt=\"image-20210418160308920\" style=\"zoom:50%;\" /> <img src=\"待购买.assets/image-asb.png\" alt=\"image-20210418160308920\" style=\"zoom:50%;\" />";
-    List<MatchEntity> matchEntities = find(source);
-    System.out.println(matchEntities);
   }
 
 }

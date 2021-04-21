@@ -8,3 +8,20 @@
 java -jar xxx.jar xxx.md
 java -jar xxx.jar -c config.json xxx.md
 ```
+
+TODO：
+```
+1、login username passwd
+2、支持更新文档，要记录上一次上传的文件。要么只上传更新的，要么全部删除后上传。
+3、生成配置文件
+4、不要处理代码块中的数据
+```
+
+异常场景：
+```
+配置文件格式不对。
+必选项没填。
+未认证。
+登录失败。
+请求URL失败
+```
