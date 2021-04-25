@@ -2,6 +2,7 @@ package cn.demojie.mduploader.utils;
 
 import cn.demojie.mduploader.entity.MatchEntity;
 import java.util.List;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +16,8 @@ class MatcherUtilsTest {
     int src1Start = source.indexOf(src1);
     int src2Start = source.indexOf(src2);
     List<MatchEntity> matchEntities = MatcherUtils.find(source);
-    List<MatchEntity> expectedEntities = List
-        .of(new MatchEntity(src1Start, src1Start + src1.length(), src1),
+    List<MatchEntity> expectedEntities =
+        Lists.list(new MatchEntity(src1Start, src1Start + src1.length(), src1),
             new MatchEntity(src2Start, src2Start + src2.length(), src2));
     Assertions.assertArrayEquals(expectedEntities.toArray(), matchEntities.toArray());
   }
@@ -29,8 +30,8 @@ class MatcherUtilsTest {
     int src1Start = source.indexOf(src1);
     int src2Start = source.indexOf(src2);
     List<MatchEntity> matchEntities = MatcherUtils.find(source);
-    List<MatchEntity> expectedEntities = List
-        .of(new MatchEntity(src1Start, src1Start + src1.length(), src1),
+    List<MatchEntity> expectedEntities = Lists
+        .list(new MatchEntity(src1Start, src1Start + src1.length(), src1),
             new MatchEntity(src2Start, src2Start + src2.length(), src2));
     Assertions.assertArrayEquals(expectedEntities.toArray(), matchEntities.toArray());
   }
@@ -44,8 +45,8 @@ class MatcherUtilsTest {
     int src1Start = source.indexOf(src1);
     int src2Start = source.indexOf(src2);
     List<MatchEntity> matchEntities = MatcherUtils.find(source);
-    List<MatchEntity> expectedEntities = List
-        .of(new MatchEntity(src1Start, src1Start + src1.length(), src1),
+    List<MatchEntity> expectedEntities = Lists
+        .list(new MatchEntity(src1Start, src1Start + src1.length(), src1),
             new MatchEntity(src2Start, src2Start + src2.length(), src2));
     Assertions.assertArrayEquals(expectedEntities.toArray(), matchEntities.toArray());
   }
@@ -58,8 +59,8 @@ class MatcherUtilsTest {
     int src1Start = source.indexOf(src1);
     int src2Start = source.indexOf(src2);
     List<MatchEntity> matchEntities = MatcherUtils.find(source);
-    List<MatchEntity> expectedEntities = List
-        .of(new MatchEntity(src1Start, src1Start + src1.length(), src1),
+    List<MatchEntity> expectedEntities = Lists
+        .list(new MatchEntity(src1Start, src1Start + src1.length(), src1),
             new MatchEntity(src2Start, src2Start + src2.length(), src2));
     Assertions.assertArrayEquals(expectedEntities.toArray(), matchEntities.toArray());
   }
@@ -74,8 +75,8 @@ class MatcherUtilsTest {
     int src1Start = source.indexOf(src1);
     int src2Start = source.indexOf(src2);
     List<MatchEntity> matchEntities = MatcherUtils.find(source);
-    List<MatchEntity> expectedEntities = List
-        .of(new MatchEntity(src1Start, src1Start + src1.length(), src1),
+    List<MatchEntity> expectedEntities = Lists
+        .list(new MatchEntity(src1Start, src1Start + src1.length(), src1),
             new MatchEntity(src2Start, src2Start + src2.length(), src2));
     Assertions.assertArrayEquals(expectedEntities.toArray(), matchEntities.toArray());
 
@@ -85,7 +86,7 @@ class MatcherUtilsTest {
     String target = String
         .format("![image-20210418160308920](%s) ![image-20210418160308920](%s) ", target1, target2);
 
-    String replace = MatcherUtils.replace(source, matchEntities, List.of(target1, target2));
+    String replace = MatcherUtils.replace(source, matchEntities, Lists.list(target1, target2));
     Assertions.assertEquals(target, replace);
   }
 }
