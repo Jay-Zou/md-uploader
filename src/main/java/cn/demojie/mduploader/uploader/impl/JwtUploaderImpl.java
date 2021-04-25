@@ -54,10 +54,10 @@ public class JwtUploaderImpl extends AbstractUploader {
     List<Header> headers = new ArrayList<>(2);
     // 使用已经 BASE64 处理的用户名和密码
     if (mduConfig.getToken() != null) {
-      headers.add(CommonUtils.newAuthHeader(mduConfig.getToken()));
+      headers.add(CommonUtils.newBearerAuthHeader(mduConfig.getToken()));
     } else {
       // 使用 username/password
-      headers.add(CommonUtils.newAuthHeader(mduConfig.getUsername(), mduConfig.getPassword()));
+      headers.add(CommonUtils.newBasicAuthHeader(mduConfig.getUsername(), mduConfig.getPassword()));
     }
     // Content-Disposition: form-data
     headers.add(new BasicHeader("Content-Disposition", "form-data; filename=\"" + name + "\""));

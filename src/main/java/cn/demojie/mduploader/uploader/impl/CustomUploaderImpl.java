@@ -52,10 +52,10 @@ public class CustomUploaderImpl extends AbstractUploader {
     List<Header> headers = new ArrayList<>(2);
     // 使用已经 BASE64 处理的用户名和密码
     if (mduConfig.getToken() != null) {
-      headers.add(CommonUtils.newAuthHeader(mduConfig.getToken()));
+      headers.add(CommonUtils.newBearerAuthHeader(mduConfig.getToken()));
     } else {
       // 使用 username/password
-      headers.add(CommonUtils.newAuthHeader(mduConfig.getUsername(), mduConfig.getPassword()));
+      headers.add(CommonUtils.newBasicAuthHeader(mduConfig.getUsername(), mduConfig.getPassword()));
     }
     headers.add(new BasicHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString()));
     return headers.toArray(new Header[0]);

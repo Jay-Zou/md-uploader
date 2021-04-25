@@ -34,14 +34,14 @@ public class CommonUtils {
     return fileNameMap.getContentTypeFor(filePath);
   }
 
-  public static Header newAuthHeader(String auth) {
+  public static Header newBearerAuthHeader(String auth) {
     return new BasicHeader(HttpHeaders.AUTHORIZATION, "Bearer " + auth);
   }
 
-  public static Header newAuthHeader(String username, String password) {
+  public static Header newBasicAuthHeader(String username, String password) {
     String format = String.format("%s:%s", username, password);
     String auth = Base64.getEncoder().encodeToString(format.getBytes(StandardCharsets.UTF_8));
-    return newAuthHeader(auth);
+    return new BasicHeader(HttpHeaders.AUTHORIZATION, "Basic " + auth);
   }
 
   public static void checkFileExists(File file) {
