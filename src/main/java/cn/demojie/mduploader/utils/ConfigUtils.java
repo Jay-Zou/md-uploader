@@ -10,4 +10,8 @@ public class ConfigUtils {
     return new File(CommonUtils.getHomePath(), DEFAULT_CONFIG_PATH);
   }
 
+  public static String getDefaultConfigFilePath() {
+    return CommonUtils.getHomePath() + "/" + DEFAULT_CONFIG_PATH;
+  }
+
 }

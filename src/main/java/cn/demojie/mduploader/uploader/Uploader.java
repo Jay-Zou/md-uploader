@@ -1,12 +1,12 @@
 package cn.demojie.mduploader.uploader;
 
-import cn.demojie.mduploader.config.MduConfig;
+import cn.demojie.mduploader.config.ContextConfig;
 import java.io.File;
 import java.util.List;
 
 public interface Uploader {
 
-  String upload(MduConfig config, File file) throws Exception;
+  String upload(ContextConfig config, File file);
 
-  List<String> upload(MduConfig config, List<File> files) throws Exception;
+  List<String> upload(ContextConfig config, List<File> files);
 }

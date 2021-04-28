@@ -1,6 +1,8 @@
 package cn.demojie.mduploader.uploader.impl;
 
-import cn.demojie.mduploader.config.MduConfig;
+import cn.demojie.mduploader.config.ContextConfig;
+import cn.demojie.mduploader.config.UserConfig;
+import cn.demojie.mduploader.exception.UploaderException;
 import cn.demojie.mduploader.uploader.AbstractUploader;
 import cn.demojie.mduploader.utils.CommonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,42 +24,47 @@ import org.springframework.stereotype.Component;
 public class JwtUploaderImpl extends AbstractUploader {
 
   @Override
-  public String upload(MduConfig mduConfig, File file) throws Exception {
+  public String upload(ContextConfig contextConfig, File file) {
     System.out.println("上传文件：" + file.getAbsolutePath());
-    HttpPost httpPost = buildRequest(mduConfig, file);
-
-    HttpResponse httpResponse = CommonUtils.getHttpClient().execute(httpPost);
-    HttpEntity httpEntity = httpResponse.getEntity();
-    if (httpEntity == null) {
-      return null;
+    HttpPost httpPost = buildRequest(contextConfig, file);
+    JsonNode jsonNode;
+    try {
+      HttpResponse httpResponse = CommonUtils.getHttpClient().execute(httpPost);
+      HttpEntity httpEntity = httpResponse.getEntity();
+      if (httpEntity == null) {
+        return null;
+      }
+      String resp = EntityUtils.toString(httpEntity, StandardCharsets.UTF_8);
+      jsonNode = CommonUtils.getObjectMapper().readTree(resp);
+    } catch (Exception e) {
+      throw new UploaderException("上传文件失败：" + e.getMessage());
     }
-    String resp = EntityUtils.toString(httpEntity, StandardCharsets.UTF_8);
-    JsonNode jsonNode = CommonUtils.getObjectMapper().readTree(resp);
     if (jsonNode == null) {
-      throw new RuntimeException("调用上传接口出错");
+      throw new UploaderException("调用上传接口出错");
     }
     if (!jsonNode.has("source_url")) {
-      throw new RuntimeException("调用上传接口出错：" + jsonNode);
+      throw new UploaderException("调用上传接口出错：" + jsonNode);
     }
     return jsonNode.get("source_url").asText();
   }
 
-  private HttpPost buildRequest(MduConfig mduConfig, File file) {
-    HttpPost httpPost = new HttpPost(mduConfig.getUploadRrl());
-    httpPost.setHeaders(buildHeaders(mduConfig, file.getName()));
+  private HttpPost buildRequest(ContextConfig contextConfig, File file) {
+    HttpPost httpPost = new HttpPost(contextConfig.getUserConfig().getUploadRrl());
+    httpPost.setHeaders(buildHeaders(contextConfig.getUserConfig(), file.getName()));
     httpPost.setEntity(
         new FileEntity(file, ContentType.parse(CommonUtils.getMimeType(file.getName()))));
     return httpPost;
   }
 
-  private Header[] buildHeaders(MduConfig mduConfig, String name) {
+  private Header[] buildHeaders(UserConfig userConfig, String name) {
     List<Header> headers = new ArrayList<>(2);
     // 使用已经 BASE64 处理的用户名和密码
-    if (mduConfig.getToken() != null) {
-      headers.add(CommonUtils.newBearerAuthHeader(mduConfig.getToken()));
+    if (userConfig.getToken() != null) {
+      headers.add(CommonUtils.newBearerAuthHeader(userConfig.getToken()));
     } else {
       // 使用 username/password
-      headers.add(CommonUtils.newBasicAuthHeader(mduConfig.getUsername(), mduConfig.getPassword()));
+      headers
+          .add(CommonUtils.newBasicAuthHeader(userConfig.getUsername(), userConfig.getPassword()));
     }
     // Content-Disposition: form-data
     headers.add(new BasicHeader("Content-Disposition", "form-data; filename=\"" + name + "\""));

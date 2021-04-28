@@ -32,6 +32,38 @@ TODO：
 2、支持更新文档，要记录上一次上传的文件。要么只上传更新的，要么全部删除后上传。
 3、生成配置文件
 4、不要处理代码块中的数据
+5、-r 来回写到原始文件，可以放到配置文件中
+6、打成zip包，然后包含 .mduploader 目录，以及包含 bin 启动脚本
+7、命令行支持，看看其他人怎么写
+```
+
+```
+@echo off
+@REM ==== START VALIDATION ====
+if not "%JAVA_HOME%"=="" goto OkJHome
+for %%i in (java.exe) do set "JAVACMD=%%~$PATH:i"
+goto checkJCmd
+
+:OkJHome
+set "JAVACMD=%JAVA_HOME%\bin\java.exe"
+
+:checkJCmd
+if exist "%JAVACMD%" goto init
+
+echo The JAVA_HOME environment variable is not defined correctly >&2
+echo This environment variable is needed to run this program >&2
+echo NB: JAVA_HOME should point to a JDK not a JRE >&2
+goto error
+@REM ==== END VALIDATION ====
+
+:init
+
+set CMD_LINE_ARGS=%*
+set JAR_FILE=C:/Users/User/global-bin/md-uploader-0.0.1-SNAPSHOT.jar
+
+"%JAVACMD%" ^
+  -jar %JAR_FILE% ^
+  %CMD_LINE_ARGS%
 ```
 
 异常场景：

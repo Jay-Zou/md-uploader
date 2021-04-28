@@ -1,5 +1,6 @@
 package cn.demojie.mduploader.utils;
 
+import cn.demojie.mduploader.exception.UploaderException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -47,10 +48,10 @@ public class CommonUtils {
   public static void checkFileExists(File file) {
     boolean exists = Files.exists(file.toPath());
     if (!exists) {
-      throw new RuntimeException("文件不存在" + file.getAbsolutePath());
+      throw new UploaderException("文件不存在: " + file.getAbsolutePath());
     }
     if (file.isDirectory()) {
-      throw new RuntimeException("不支持目录" + file.getAbsolutePath());
+      throw new UploaderException("不支持目录: " + file.getAbsolutePath());
     }
   }
 

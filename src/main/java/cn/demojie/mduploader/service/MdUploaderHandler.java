@@ -1,6 +1,6 @@
 package cn.demojie.mduploader.service;
 
-import cn.demojie.mduploader.config.MduConfig;
+import cn.demojie.mduploader.config.ContextConfig;
 import cn.demojie.mduploader.entity.MatchEntity;
 import cn.demojie.mduploader.entity.MathInfoInLine;
 import cn.demojie.mduploader.entity.UploaderContext;
@@ -8,13 +8,10 @@ import cn.demojie.mduploader.uploader.Uploader;
 import cn.demojie.mduploader.utils.CommonUtils;
 import cn.demojie.mduploader.utils.MatcherUtils;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +24,8 @@ public class MdUploaderHandler {
   @Autowired
   MdLinkParser mdLinkParser;
 
-  @SneakyThrows
-  public void handle(MduConfig mduConfig) {
-    String mdFile = mduConfig.getMdFile();
+  public void handle(ContextConfig contextConfig) {
+    String mdFile = contextConfig.getMdFile();
     // TODO 当修改文件后，需要将原文件删除。所以上传文件后要保存一下链接
     CommonUtils.checkFileExists(mdFile);
 
@@ -39,7 +35,7 @@ public class MdUploaderHandler {
       System.exit(0);
     }
     // TODO 对于重复文件，不需要重复上传
-    uploadFiles(mduConfig, uploaderContext);
+    uploadFiles(contextConfig, uploaderContext);
     System.out.println("全部上传完毕！");
 
     List<String> originContent = uploaderContext.getOriginContent();
@@ -47,7 +43,7 @@ public class MdUploaderHandler {
     rePutToContent(mathInfoInLineList, originContent);
 
     // CommonUtils.printContent(originContent);
-    writeToFile(mdFile, originContent);
+    writeToFile(contextConfig.getOutputMdFile(), originContent);
     System.out.println("完成！");
   }
 
@@ -59,18 +55,18 @@ public class MdUploaderHandler {
     }
   }
 
-  private void writeToFile(String mdFile, List<String> originContent) throws IOException {
-    File file = new File(mdFile + ".o.md");
+  private void writeToFile(String outFile, List<String> originContent) {
+    File file = new File(outFile);
     System.out.println("写入文件：" + file.getAbsolutePath());
     try {
-      Files.write(file.toPath(), originContent, StandardOpenOption.CREATE_NEW);
-    } catch (FileAlreadyExistsException e) {
-      System.err.println("文件已存在，写入失败！");
+      Files.write(file.toPath(), originContent, StandardOpenOption.CREATE);
+    } catch (Exception e) {
+      System.err.println("文件写入失败！" + e.getMessage());
       System.exit(0);
     }
   }
 
-  private void uploadFiles(MduConfig mduConfig, UploaderContext uploaderContext) throws Exception {
+  private void uploadFiles(ContextConfig contextConfig, UploaderContext uploaderContext) {
     List<MathInfoInLine> mathInfoInLineList = uploaderContext.getMathInfoInLineList();
     for (MathInfoInLine mathInfoInLine : mathInfoInLineList) {
       String content = mathInfoInLine.getContent();
@@ -85,7 +81,7 @@ public class MdUploaderHandler {
         return file;
       }).collect(Collectors.toList());
       // 一行内的上传文件
-      List<String> returnLinks = uploader.upload(mduConfig, preUploadFiles);
+      List<String> returnLinks = uploader.upload(contextConfig, preUploadFiles);
       System.out.println("返回的链接：" + returnLinks);
       String finalContent = MatcherUtils.replace(content, matchEntityList, returnLinks);
       // 将替换后的内容放回去

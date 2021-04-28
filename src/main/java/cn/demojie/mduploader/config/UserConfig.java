@@ -2,20 +2,14 @@ package cn.demojie.mduploader.config;
 
 import lombok.Data;
 
-
 @Data
-public class MduConfig {
+public class UserConfig {
 
   /**
    * 账号密码
    */
   private String username;
   private String password;
-
-  /**
-   * MdFile
-   */
-  private String mdFile;
 
   /**
    * 密码账号的 base64 编码（优先使用这个，当为 null 时采用密码账号）
