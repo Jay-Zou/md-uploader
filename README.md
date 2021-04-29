@@ -1,69 +1,46 @@
-# Markdown 上传器
+# Markdown 图片上传器
 
-> 将 Markdown 文档中的图片和文件通过指定 API 上传，然后替换链接。之后将整个 markdown 上传或者生成文档用于复制。
+> 将 Markdown 文档中的图片通过指定 API 上传，然后替换链接。之后将整个 markdown 上传或者生成文档用于复制。
 
+使用方式：
 ```
-JDK版本：1.8
+JDK版本：>= 1.8
 默认配置文件：$HOME/.mduploader/config.json
 
-java -jar xxx.jar xxx.md
-java -jar xxx.jar -c config.json xxx.md
-```
-config.json 模板：
-- 使用用户名和密码：
-```json
+1、将 zip 文件解压，然后将 .mduploader 目录整个复制到 $HOME 目录下：
+- 比如 C:\Users\JayZou\.mduploader
+
+2、修改配置文件 config.json：
 {
   "username": "demojie",
   "password": "11111111",
   "uploadRrl": "http://192.168.198.155:1080/wp-json/wp/v2/media"
 }
-```
-- 使用 token：
-```json
-{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjE5OC4xNTU6MTA4MCIsImlhdCI6MTYxODg0MzU2OSwibmJmIjoxNjE4ODQzNTY5LCJleHAiOjE2MTk0NDgzNjksImRhdGEiOnsidXNlciI6eyJpZCI6IjEifX19.itYMAErBmJkb0w5lfUHo8t8uYbYDoNyM9n787owAGL4",
-  "uploadRrl": "http://192.168.198.155:1080/wp-json/wp/v2/media"
-}
+- wordpress 的 Basic 和 Token 认证两个插件同时开启无效，所以这里先使用 Basic 认证
+
+3、配置环境变量：
+- 将 .mduploader 路径加入环境变量，方便全局运行命令
+
+4、使用：
+a、 直接指定 md 文件，会在 md 文件的同级目录下生成 xx.md.o.md 文件
+mdu test.md
+
+b、 -r 参数，直接替换原始文件
+mdu -r test.md
+
+c、 -c 参数，指定配置文件
+mdu -c myconfig.json test.md
 ```
 
 TODO：
 ```
-1、login username passwd
+1、login username passwd，生成 token
 2、支持更新文档，要记录上一次上传的文件。要么只上传更新的，要么全部删除后上传。
 3、生成配置文件
 4、不要处理代码块中的数据
-5、-r 来回写到原始文件，可以放到配置文件中
-6、打成zip包，然后包含 .mduploader 目录，以及包含 bin 启动脚本
-7、命令行支持，看看其他人怎么写
-```
-
-```
-@echo off
-@REM ==== START VALIDATION ====
-if not "%JAVA_HOME%"=="" goto OkJHome
-for %%i in (java.exe) do set "JAVACMD=%%~$PATH:i"
-goto checkJCmd
-
-:OkJHome
-set "JAVACMD=%JAVA_HOME%\bin\java.exe"
-
-:checkJCmd
-if exist "%JAVACMD%" goto init
-
-echo The JAVA_HOME environment variable is not defined correctly >&2
-echo This environment variable is needed to run this program >&2
-echo NB: JAVA_HOME should point to a JDK not a JRE >&2
-goto error
-@REM ==== END VALIDATION ====
-
-:init
-
-set CMD_LINE_ARGS=%*
-set JAR_FILE=C:/Users/User/global-bin/md-uploader-0.0.1-SNAPSHOT.jar
-
-"%JAVACMD%" ^
-  -jar %JAR_FILE% ^
-  %CMD_LINE_ARGS%
+5、-r 来回写到原始文件，可以放到配置文件中（Done）
+6、打成zip包，然后包含 .mduploader 目录，以及包含 bin 启动脚本（Done）
+7、命令行支持，看看其他人怎么写（Done）
 ```
 
 异常场景：
