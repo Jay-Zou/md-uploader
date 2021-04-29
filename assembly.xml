@@ -22,5 +22,11 @@
       <directory>release</directory>
       <outputDirectory>.mduploader/</outputDirectory>
     </fileSet>
+    <fileSet>
+      <includes>
+        <include>README.md</include>
+      </includes>
+      <outputDirectory>.mduploader/</outputDirectory>
+    </fileSet>
   </fileSets>
 </assembly>
